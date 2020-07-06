@@ -21,6 +21,10 @@ const app = express()
 app.use(bodyParser.json())
 app.use(cors({
   origin (origin, callback) {
+   // 直接開網頁，不是 ajax 時，origin 是 undefined
+    if (origin === undefined) {
+    callback(null, true)
+  } else {
     if (process.env.ALLOW_CORS === 'true') {
       // 開發環境，允許
       callback(null, true)
@@ -31,7 +35,8 @@ app.use(cors({
       // 不是開發也不是從 github 過來，拒絕
       callback(new Error('Not allowed'), false)
     }
-  },
+  }
+},
   credentials: true
 }))
 app.use(session({
